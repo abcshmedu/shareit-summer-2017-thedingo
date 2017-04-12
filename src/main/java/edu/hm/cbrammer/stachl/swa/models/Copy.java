@@ -1,4 +1,4 @@
-package edu.hm.cbrammer.swa.models;
+package edu.hm.cbrammer.stachl.swa.models;
 
 public class Copy
 {

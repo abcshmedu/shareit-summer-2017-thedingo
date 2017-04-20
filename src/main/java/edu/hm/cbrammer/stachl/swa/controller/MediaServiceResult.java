@@ -1,38 +1,35 @@
 package edu.hm.cbrammer.stachl.swa.controller;
 
+import org.json.JSONObject;
+
 import javax.ws.rs.core.Response;
 
 /**
  * Created by stach on 12-Apr-17.
  */
-public enum MediaServiceResult {
-    OK(Response.Status.OK),
-
-    CREATED(Response.Status.CREATED),
-
-    BAD_REQUEST(Response.Status.BAD_REQUEST),
-
-    UNAUTHORIZED(Response.Status.UNAUTHORIZED),
-
-    NOT_FOUND(Response.Status.NOT_FOUND),
-
-    INTERNAL_SERVER_ERROR(Response.Status.INTERNAL_SERVER_ERROR);
-
+public class MediaServiceResult {
 
     private final Response.Status status;
-
-    MediaServiceResult(Response.Status status){
-
-        this.status = status;
-
-    }
-
-    public int getCode() {
-        return status.getStatusCode();
-    }
+    private final String errorMessage;
 
     public Response.Status getStatus() {
         return status;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public MediaServiceResult(Response.Status status, String errorMessage) {
+        this.status = status;
+        this.errorMessage = errorMessage;
+    }
+
+    public String getAsJSON(){
+        JSONObject object = new JSONObject();
+        object.append("code", status.getStatusCode());
+        object.append("detail", errorMessage);
+        return object.toString();
     }
 
 }

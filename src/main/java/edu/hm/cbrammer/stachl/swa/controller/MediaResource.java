@@ -2,12 +2,14 @@ package edu.hm.cbrammer.stachl.swa.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.cbrammer.stachl.swa.models.Book;
+import edu.hm.cbrammer.stachl.swa.models.Disc;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created by stach on 12-Apr-17.
@@ -17,7 +19,7 @@ public class MediaResource {
 
     private final MediaService mediaService;
 
-    public MediaResource(MediaService mediaService){
+    public MediaResource(MediaService mediaService) {
         this.mediaService = mediaService;
     }
 
@@ -25,45 +27,40 @@ public class MediaResource {
     @Path("/books")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createBook(String json){
+    public Response createBook(Book book) {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Response response;
-        try{
-            Book book = objectMapper.readValue(json,Book.class);
-            mediaService.addBook(book);
-            //TODO Header Esponses from add Book
-            response = null;
-        }
-        catch(IOException e){
-            JSONObject object = new JSONObject();
-            object.append("code", Response.Status.BAD_REQUEST.getStatusCode());
-            object.append("detail", "Error: Json not parsable");
-            response = Response.status(Response.Status.BAD_REQUEST)
-                    .entity(object.toString())
-                    .build();
-        }
-        return response;
+        MediaServiceResult result = mediaService.addBook(book);
+
+        return Response.status(result.getStatus())
+                .entity(result.getAsJSON())
+                .build();
     }
 
     @GET
     @Path("/books/{isbn}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBook(@PathParam("isbn") String isbn ){
+    public Book getBook(@PathParam("isbn") String isbn) {
 
+        return getSingleBook(isbn);
     }
 
     @GET
     @Path("/books")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBooks(){}
+    public Book[] getBooks() {
+        return (Book[])mediaService.getBooks();
+    }
 
     @PUT
     @Path("/books/{isbn}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBook(@PathParam("isbn") String isbn ){
+    public Response updateBook(Book book, @PathParam("isbn") String isbn) {
 
+        MediaServiceResult result = mediaService.updateBook(new Book(book.getTitle(),book.getAuthor(),isbn));
+        return Response.status(result.getStatus())
+                .entity(result.getAsJSON())
+                .build();
     }
 
     //
@@ -74,27 +71,46 @@ public class MediaResource {
     @Path("/discs")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createDisc(){
+    public Response createDisc(Disc disc) {
+
+        MediaServiceResult result = mediaService.addDisc(disc);
+
+        return Response.status(result.getStatus())
+                .entity(result.getAsJSON())
+                .build();
 
     }
 
     @GET
     @Path("/discs/{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDisc(@PathParam("barcode") String barcode ){
-
+    public Disc getDisc(@PathParam("barcode") String barcode) {
+        return getSingleDisc(barcode);
     }
 
     @GET
     @Path("/discs")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDiscs(){}
+    public Disc[] getDiscs() {
+        return (Disc[])mediaService.getDiscs();
+    }
 
     @PUT
     @Path("/discs/{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getDisc(@PathParam("barcode") String barcode ){
+    public Response updateDisc(Disc disc, @PathParam("barcode") String barcode) {
+        MediaServiceResult result = mediaService.updateDisc(new Disc(disc.getTitle(),barcode,disc.getDirector(), disc.getFsk()));
+        return Response.status(result.getStatus())
+                .entity(result.getAsJSON())
+                .build();
+    }
 
+    private Book getSingleBook(String isbn){
+        return (Book)Arrays.stream(mediaService.getBooks()).filter(b -> ((Book)b).getIsbn() == isbn).findFirst().get();
+    }
+
+    private Disc getSingleDisc(String barcode){
+        return (Disc)Arrays.stream(mediaService.getDiscs()).filter(b -> ((Disc)b).getBarcode() == barcode).findFirst().get();
     }
 }

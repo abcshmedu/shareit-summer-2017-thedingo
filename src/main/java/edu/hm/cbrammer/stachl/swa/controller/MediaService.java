@@ -11,13 +11,13 @@ import javax.ws.rs.core.Response;
  */
 public interface MediaService {
 
-    Response.Status addBook(Book book);
+    MediaServiceResult addBook(Book book);
 
-    Response.Status addDisc(Disc disc);
+    MediaServiceResult addDisc(Disc disc);
 
-    Response.Status updateBook(Book book);
+    MediaServiceResult updateBook(Book book);
 
-    Response.Status updateDisc(Disc disc);
+    MediaServiceResult updateDisc(Disc disc);
 
     Medium[] getBooks();
 

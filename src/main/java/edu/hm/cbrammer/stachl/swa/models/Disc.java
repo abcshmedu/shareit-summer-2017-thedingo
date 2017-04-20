@@ -3,23 +3,22 @@ package edu.hm.cbrammer.stachl.swa.models;
 /**
  * Created by cbram on 12.04.2017.
  */
-public class Disc
+public class Disc extends Medium
 {
 
     private final String barcode;
     private final String director;
     private final int fsk;
 
-    public Disc(String barcode, String director, int fsk) {
+    public Disc(String title, String barcode, String director, int fsk) {
+        super(title);
         this.barcode = barcode;
         this.director = director;
         this.fsk = fsk;
     }
 
     private Disc(){
-        barcode = "";
-        director = "";
-        fsk = 0;
+        this("","","",0);
     }
 
     public String getBarcode() {

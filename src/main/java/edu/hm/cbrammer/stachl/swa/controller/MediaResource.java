@@ -1,19 +1,13 @@
 package edu.hm.cbrammer.stachl.swa.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.hm.cbrammer.stachl.swa.models.Book;
 import edu.hm.cbrammer.stachl.swa.models.Disc;
-import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * Created by stach on 12-Apr-17.
- */
 @Path("/media")
 public class MediaResource {
 
@@ -28,7 +22,6 @@ public class MediaResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createBook(Book book) {
-
         MediaServiceResult result = mediaService.addBook(book);
 
         return Response.status(result.getStatus())

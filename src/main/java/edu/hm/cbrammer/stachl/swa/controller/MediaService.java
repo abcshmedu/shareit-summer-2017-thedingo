@@ -19,7 +19,7 @@ public interface MediaService {
 
     MediaServiceResult updateDisc(Disc disc);
 
-    Medium[] getBooks();
+    Book[] getBooks();
 
-    Medium[] getDiscs();
+    Disc[] getDiscs();
 }

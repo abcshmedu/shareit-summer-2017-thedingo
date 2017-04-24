@@ -18,7 +18,7 @@ public class Disc extends Medium
     }
 
     private Disc(){
-        this("","","",0);
+        this("","","",-1);
     }
 
     public String getBarcode() {

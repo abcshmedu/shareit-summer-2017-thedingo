@@ -42,6 +42,7 @@ public class Disc extends Medium
 
         if (fsk != disc.fsk) return false;
         if (barcode != null ? !barcode.equals(disc.barcode) : disc.barcode != null) return false;
+        if (!getTitle().equals(disc.getTitle())) return false;
         return director != null ? director.equals(disc.director) : disc.director == null;
     }
 

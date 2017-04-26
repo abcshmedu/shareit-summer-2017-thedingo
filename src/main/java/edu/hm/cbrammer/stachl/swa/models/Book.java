@@ -39,6 +39,7 @@ public class Book extends Medium
         Book book = (Book) o;
 
         if (!getAuthor().equals(book.getAuthor())) return false;
+        if (!getTitle().equals(book.getTitle())) return false;
         return getIsbn().equals(book.getIsbn());
     }
 

@@ -58,7 +58,7 @@ public class MediaServiceImpl implements MediaService
 
             books.put(book.getIsbn(), new Book(newTitle,newAuthor,book.getIsbn()));
 
-            result = new MediaServiceResult(Response.Status.CREATED, String.format("Book with ISBN '%s' was successfully updated.", book.getIsbn()));
+            result = new MediaServiceResult(Response.Status.OK, String.format("Book with ISBN '%s' was successfully updated.", book.getIsbn()));
         }
         else
         {
@@ -81,7 +81,7 @@ public class MediaServiceImpl implements MediaService
 
             discs.put(disc.getBarcode(), new Disc(newTitle,disc.getBarcode(),newDirector,newFsk));
 
-            result = new MediaServiceResult(Response.Status.CREATED, String.format("Disc with Barcode '%s' was successfully updated.", disc.getBarcode()));
+            result = new MediaServiceResult(Response.Status.OK, String.format("Disc with Barcode '%s' was successfully updated.", disc.getBarcode()));
         }
         else
         {

@@ -7,6 +7,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Path("/media")
 public class MediaResource {
@@ -33,7 +34,12 @@ public class MediaResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Book getBook(@PathParam("isbn") String isbn) {
 
-        return getSingleBook(isbn);
+        try {
+            return getSingleBook(isbn);
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     @GET
@@ -77,7 +83,12 @@ public class MediaResource {
     @Path("/discs/{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
     public Disc getDisc(@PathParam("barcode") String barcode) {
-        return getSingleDisc(barcode);
+        try {
+            return getSingleDisc(barcode);
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     @GET

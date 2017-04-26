@@ -31,8 +31,6 @@ public class MediaResourceTest {
         assertEquals(result.getStatus(),Response.Status.BAD_REQUEST.getStatusCode());
     }
 
-
-
     @Test
     public void getBook() throws Exception {
         Book testBook = new Book("C", "D", "1234");
@@ -64,13 +62,47 @@ public class MediaResourceTest {
     }
 
     @Test
-    public void updateBook() throws Exception {
+    public void updateBookTitle() throws Exception {
         Book testBook = new Book("T", "I", "58686");
         mediaResource.createBook(testBook);
         Response response = mediaResource.updateBook(new Book("Hallo","", ""),testBook.getIsbn());
-        assertEquals(response,Response.Status.OK);
+        assertEquals(response.getStatus(),Response.Status.OK.getStatusCode());
+        Book result = mediaResource.getBook(testBook.getIsbn());
+        assertEquals(result.getTitle(), "Hallo");
+        assertEquals(result.getAuthor(), testBook.getAuthor());
     }
 
+    @Test
+    public void updateBookAuthor() throws Exception {
+        Book testBook = new Book("T", "I", "78965");
+        mediaResource.createBook(testBook);
+        Response response = mediaResource.updateBook(new Book("","olive", ""),testBook.getIsbn());
+        assertEquals(response.getStatus(),Response.Status.OK.getStatusCode());
+        Book result = mediaResource.getBook(testBook.getIsbn());
+        assertEquals(result.getTitle(), testBook.getTitle());
+        assertEquals(result.getAuthor(), "olive");
+    }
+
+    @Test
+    public void updateBookAISBN() throws Exception {
+        Book testBook = new Book("T", "I", "78965");
+        mediaResource.createBook(testBook);
+        Response response = mediaResource.updateBook(new Book("","", "test"),testBook.getIsbn());
+        assertEquals(response.getStatus(),Response.Status.OK.getStatusCode());
+        Book result = mediaResource.getBook(testBook.getIsbn());
+        assertEquals(result.getTitle(), testBook.getTitle());
+        assertEquals(result.getAuthor(), testBook.getAuthor());
+        Book notFound = mediaResource.getBook("test");
+        assertEquals(notFound,null);
+    }
+
+    @Test
+    public void updateBookNotFound() throws Exception {
+
+        Response response = mediaResource.updateBook(new Book("","olive", ""),"irgendwas");
+        assertEquals(response.getStatus(),Response.Status.NOT_FOUND.getStatusCode());
+
+    }
     @Test
     public void createDisc() throws Exception {
 

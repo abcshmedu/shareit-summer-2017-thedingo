@@ -33,7 +33,7 @@ public class MediaServiceImpl implements MediaService
     public MediaServiceResult addDisc(Disc disc)
     {
         final MediaServiceResult result;
-        if(books.containsKey(disc.getBarcode()))
+        if(discs.containsKey(disc.getBarcode()))
         {
             result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Disc with Barcode '%s' already exists.", disc.getBarcode()));
         }
@@ -71,7 +71,7 @@ public class MediaServiceImpl implements MediaService
     public MediaServiceResult updateDisc(Disc disc)
     {
         final MediaServiceResult result;
-        if(books.containsKey(disc.getBarcode()))
+        if(discs.containsKey(disc.getBarcode()))
         {
             final Disc currentDisc = discs.get(disc.getBarcode());
 

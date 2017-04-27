@@ -27,8 +27,8 @@ public class MediaServiceResult {
 
     public String getAsJSON(){
         JSONObject object = new JSONObject();
-        object.append("code", status.getStatusCode());
-        object.append("detail", errorMessage);
+        object.append("code", getStatus().getStatusCode());
+        object.append("detail", getErrorMessage());
         return object.toString();
     }
 

@@ -27,17 +27,8 @@ public class AuthorizationHandler extends HandlerWrapper {
         String[] requestArray = JWT.split(" ");
 
         if (requestArray.length == 1) {
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(Response.SC_BAD_REQUEST);
-            response.setContentType("application/json");
 
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("code", "400");
-            jsonObject.put("detail", "Missing token. Format: 'bearer %TOKEN%'");
-
-            jsonObject.write(response.getWriter());
-            response.getWriter().flush();
-
+            sendResponse(response,Response.SC_BAD_REQUEST,"Missing token. Format: 'bearer %TOKEN%'");
 
             return;
         } else {
@@ -45,7 +36,7 @@ public class AuthorizationHandler extends HandlerWrapper {
         }
         try {
 
-            Claims claims = Jwts.parser().setSigningKey(KEY).parseClaimsJws(JWT).getBody();
+            Jwts.parser().setSigningKey(KEY).parseClaimsJws(JWT);
 
             super.handle(target, baseRequest, request, response);
 
@@ -53,18 +44,23 @@ public class AuthorizationHandler extends HandlerWrapper {
             //OK, we can trust this JWT
 
         } catch (Exception e) {
-            
-            response.setCharacterEncoding("UTF-8");
-            response.setStatus(Response.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
 
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("code", "401");
-            jsonObject.put("detail", "Bad JWT Token. Request new one from Authorization Server");
+            sendResponse(response,Response.SC_UNAUTHORIZED,"Bad JWT Token. Request new one from Authorization Server");
 
-            jsonObject.write(response.getWriter());
-            response.getWriter().flush();
         }
 
+    }
+
+    private void sendResponse(HttpServletResponse response, int status, String message) throws IOException{
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(status);
+        response.setContentType("application/json");
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", status);
+        jsonObject.put("detail", message);
+
+        jsonObject.write(response.getWriter());
+        response.getWriter().flush();
     }
 }

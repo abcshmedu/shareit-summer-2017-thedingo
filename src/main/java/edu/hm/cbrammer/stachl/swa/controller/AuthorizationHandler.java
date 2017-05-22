@@ -5,7 +5,9 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.handler.HandlerWrapper;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +27,16 @@ public class AuthorizationHandler extends HandlerWrapper {
 
         JWT = JWT.split(" ")[1];
 
+        if(JWT.isEmpty()){
+
+            //response.setContentType("JSON");
+            response.setStatus(Response.SC_BAD_REQUEST);
+            //JSONObject jsonObject = new JSONObject();
+
+
+
+            return;
+        }
         try {
 
             Jwts.parser().setSigningKey(KEY).parseClaimsJws(JWT);

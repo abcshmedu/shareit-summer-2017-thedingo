@@ -1,6 +1,8 @@
 package edu.hm;
 
+import edu.hm.cbrammer.stachl.swa.controller.AuthorizationHandler;
 import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.HandlerWrapper;
 import org.eclipse.jetty.webapp.*;
 
 /**
@@ -21,7 +23,11 @@ public class JettyStarter {
      */
     public static void main(String... args) throws Exception {
         Server jetty = new Server(PORT);
-        jetty.setHandler(new WebAppContext(WEBAPP_DIR, APP_URL));
+
+        Handler handler = new WebAppContext(WEBAPP_DIR, APP_URL);
+        HandlerWrapper authorization = new AuthorizationHandler();
+        authorization.setHandler(handler);
+        jetty.setHandler(authorization);
         jetty.start();
         System.out.println("Jetty listening on port " + PORT);
         jetty.join();

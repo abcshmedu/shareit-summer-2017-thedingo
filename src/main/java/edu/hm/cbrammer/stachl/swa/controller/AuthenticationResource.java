@@ -15,12 +15,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 
 import static edu.hm.cbrammer.stachl.swa.models.UserRepository.SECRET;
 
 @Path("/")
 public class AuthenticationResource
 {
+    private static long EXPIRATION = 15 * 60 * 1000;
     public AuthenticationResource()
     {
     }
@@ -38,6 +40,7 @@ public class AuthenticationResource
 
             String compactJws = Jwts.builder()
                     .setSubject(user.getName())
+                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                     .signWith(SignatureAlgorithm.HS512, SECRET)
                     .compact();
             result.addToJSON("token",compactJws);

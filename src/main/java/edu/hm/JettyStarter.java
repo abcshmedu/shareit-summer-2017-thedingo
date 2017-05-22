@@ -1,7 +1,11 @@
 package edu.hm;
 
-import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.webapp.*;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
+
+import java.security.Key;
+import java.util.Base64;
 
 /**
  * Start the application without an AppServer like tomcat.
@@ -20,6 +24,10 @@ public class JettyStarter {
      * @throws Exception might throw for several reasons.
      */
     public static void main(String... args) throws Exception {
+
+        Key secretKey = MacProvider.generateKey();
+        System.out.println(Base64.getEncoder().encodeToString(secretKey.getEncoded()));
+
         Server jetty = new Server(PORT);
         jetty.setHandler(new WebAppContext(WEBAPP_DIR, APP_URL));
         jetty.start();

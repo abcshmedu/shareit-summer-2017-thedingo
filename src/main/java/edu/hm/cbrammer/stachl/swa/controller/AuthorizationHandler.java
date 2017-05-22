@@ -1,6 +1,7 @@
 package edu.hm.cbrammer.stachl.swa.controller;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
@@ -32,9 +33,8 @@ public class AuthorizationHandler extends HandlerWrapper {
 
           //OK, we can trust this JWT
 
-        } catch (SignatureException e) {
-
-            //don't trust the JWT!
+        } catch (SignatureException | MalformedJwtException e) {
+            System.out.println("Error");
         }
 
     }

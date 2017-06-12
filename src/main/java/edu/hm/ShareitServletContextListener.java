@@ -10,18 +10,22 @@ import edu.hm.cbrammer.stachl.swa.controller.MediaService;
 /**
  * Context Listener to enable usage of google guice together with jersey.
  */
-public class ShareitServletContextListener extends GuiceServletContextListener {
+public class ShareitServletContextListener extends GuiceServletContextListener
+{
 
     private static final Injector injector
-            = Guice.createInjector(new ServletModule() {
+            = Guice.createInjector(new ServletModule()
+    {
         @Override
-        protected void configureServlets() {
+        protected void configureServlets()
+        {
             bind(MediaService.class).to(MediaServiceImpl.class);
         }
     });
 
     @Override
-    protected Injector getInjector() {
+    protected Injector getInjector()
+    {
         return injector;
     }
 
@@ -31,7 +35,8 @@ public class ShareitServletContextListener extends GuiceServletContextListener {
      *
      * @return Injector instance.
      */
-    static Injector getInjectorInstance() {
+    static Injector getInjectorInstance()
+    {
         return injector;
     }
 }

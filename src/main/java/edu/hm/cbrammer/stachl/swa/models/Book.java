@@ -12,7 +12,7 @@ public class Book extends Medium
 {
     private String author;
 
-
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BOOK_ISBN", unique = true, updatable = false)
     private Isbn isbn;
 

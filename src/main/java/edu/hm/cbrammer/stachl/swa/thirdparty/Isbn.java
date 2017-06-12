@@ -201,6 +201,7 @@ public class Isbn implements Serializable
     private String normalizedIsbn;    // hyphens are removed
 
     private String prefix;
+    @Column(name = "CGroup")
     private String group;
     private String publisher;
     private String bookName;

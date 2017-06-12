@@ -50,7 +50,7 @@ public class MediaPersistenceImpl implements MediaPersistence
                 HibernateTransaction())
         {
             t.persist(book.getIsbn());
-            //t.persist(book);
+            t.persist(book);
         } catch (Exception e)
         {
 

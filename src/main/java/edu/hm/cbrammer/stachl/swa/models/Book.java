@@ -1,11 +1,22 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
+import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+@Entity
 public class Book extends Medium
 {
-    private final String author;
-    private final String isbn;
+    private String author;
 
-    public Book(String title, String author, String isbn)
+
+    @JoinColumn(name = "BOOK_ISBN", unique = true, updatable = false)
+    private Isbn isbn;
+
+    public Book(String title, String author, Isbn isbn)
     {
         super(title);
         this.author = author;
@@ -16,7 +27,7 @@ public class Book extends Medium
     {
         super("");
         this.author = "";
-        this.isbn = "";
+        this.isbn = null;
     }
 
     public String getAuthor()
@@ -24,7 +35,7 @@ public class Book extends Medium
         return author;
     }
 
-    public String getIsbn()
+    public Isbn getIsbn()
     {
         return isbn;
     }

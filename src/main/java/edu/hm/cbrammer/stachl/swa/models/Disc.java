@@ -1,14 +1,14 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
-/**
- * Created by cbram on 12.04.2017.
- */
+import javax.persistence.Entity;
+
+@Entity
 public class Disc extends Medium
 {
 
-    private final String barcode;
-    private final String director;
-    private final int fsk;
+    private String barcode;
+    private String director;
+    private int fsk;
 
     public Disc(String title, String barcode, String director, int fsk) {
         super(title);

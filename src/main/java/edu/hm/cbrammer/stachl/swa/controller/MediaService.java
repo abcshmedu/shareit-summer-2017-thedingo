@@ -15,11 +15,13 @@ public interface MediaService {
 
     MediaServiceResult addDisc(Disc disc);
 
-    MediaServiceResult updateBook(Book book);
+    MediaServiceResult updateBook(Book book, String isbn);
 
     MediaServiceResult updateDisc(Disc disc);
 
     Book[] getBooks();
+    Book getBook(String isbn);
 
     Disc[] getDiscs();
+    Disc getDisc(String barcode);
 }

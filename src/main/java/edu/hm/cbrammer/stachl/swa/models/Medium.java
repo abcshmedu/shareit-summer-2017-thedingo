@@ -1,8 +1,18 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
-public class Medium
+import javax.persistence.*;
+import java.io.Serializable;
+
+@Entity
+@Table(name="TMedium")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Medium implements Serializable
 {
-    private final String title;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private String title;
 
     public Medium(String title)
     {

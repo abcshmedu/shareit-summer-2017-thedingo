@@ -1,8 +1,7 @@
-package test;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.ServletModule;
+import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
 import edu.hm.cbrammer.stachl.swa.controller.MediaResource;
 import edu.hm.cbrammer.stachl.swa.controller.MediaService;
 import edu.hm.cbrammer.stachl.swa.controller.MediaServiceImpl;
@@ -25,9 +24,21 @@ public class MediaResourceTest
     private static MediaResource mediaResource;// = new MediaResource(null);
     private static Injector injector;
 
+    private static Isbn[] isbns;
+
     @BeforeClass
     public static void setUp() throws Exception
     {
+        isbns = new Isbn[9];
+        isbns[0]= Isbn.of("978-3551559005");
+        isbns[1]= Isbn.of("978-3551556943");
+        isbns[2]= Isbn.of("978-3608939811");
+        isbns[3]= Isbn.of("978-3442380299");
+        isbns[4]= Isbn.of("978-3888979149");
+        isbns[5]= Isbn.of("978-3833213458");
+        isbns[6]= Isbn.of("978-3833232619");
+        isbns[7]= Isbn.of("978-3608938289");
+        isbns[8]= Isbn.of("978-3423281195");
         injector = Guice.createInjector(new ServletModule()
         {
             @Override
@@ -44,8 +55,7 @@ public class MediaResourceTest
     @Test
     public void createBook() throws Exception
     {
-
-        Response result = mediaResource.createBook(new Book("A", "B", "1337"));
+        Response result = mediaResource.createBook(new Book("A", "B", isbns[0]));
         assertEquals(result.getStatus(), Response.Status.CREATED.getStatusCode());
     }
 
@@ -53,25 +63,25 @@ public class MediaResourceTest
     public void createExistingBook() throws Exception
     {
 
-        mediaResource.createBook(new Book("A", "B", "1338"));
-        Response result = mediaResource.createBook(new Book("A", "B", "1338"));
+        mediaResource.createBook(new Book("A", "B", isbns[1]));
+        Response result = mediaResource.createBook(new Book("A", "B", isbns[1]));
         assertEquals(result.getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     @Test
     public void getBook() throws Exception
     {
-        Book testBook = new Book("C", "D", "1234");
+        Book testBook = new Book("C", "D", isbns[2]);
         mediaResource.createBook(testBook);
-        Book book = mediaResource.getBook("1234");
+        Book book = mediaResource.getBook(isbns[2].toString());
         assertEquals(book, testBook);
     }
 
     @Test
     public void getBooks() throws Exception
     {
-        Book testBook = new Book("E", "F", "5678");
-        Book testBook2 = new Book("G", "H", "9123");
+        Book testBook = new Book("E", "F", isbns[3]);
+        Book testBook2 = new Book("G", "H", isbns[4]);
         mediaResource.createBook(testBook);
         mediaResource.createBook(testBook2);
 
@@ -93,11 +103,11 @@ public class MediaResourceTest
     @Test
     public void updateBookTitle() throws Exception
     {
-        Book testBook = new Book("T", "I", "58686");
+        Book testBook = new Book("T", "I", isbns[5]);
         mediaResource.createBook(testBook);
-        Response response = mediaResource.updateBook(new Book("Hallo", "", ""), testBook.getIsbn());
+        Response response = mediaResource.updateBook(new Book("Hallo", "", null), testBook.getIsbn().toString());
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        Book result = mediaResource.getBook(testBook.getIsbn());
+        Book result = mediaResource.getBook(testBook.getIsbn().toString());
         assertEquals(result.getTitle(), "Hallo");
         assertEquals(result.getAuthor(), testBook.getAuthor());
     }
@@ -105,11 +115,11 @@ public class MediaResourceTest
     @Test
     public void updateBookAuthor() throws Exception
     {
-        Book testBook = new Book("T", "I", "78965");
+        Book testBook = new Book("T", "I", isbns[6]);
         mediaResource.createBook(testBook);
-        Response response = mediaResource.updateBook(new Book("", "olive", ""), testBook.getIsbn());
+        Response response = mediaResource.updateBook(new Book("", "olive", null), testBook.getIsbn().toString());
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        Book result = mediaResource.getBook(testBook.getIsbn());
+        Book result = mediaResource.getBook(testBook.getIsbn().toString());
         assertEquals(result.getTitle(), testBook.getTitle());
         assertEquals(result.getAuthor(), "olive");
     }
@@ -117,11 +127,11 @@ public class MediaResourceTest
     @Test
     public void updateBookISBN() throws Exception
     {
-        Book testBook = new Book("T", "I", "78965");
+        Book testBook = new Book("T", "I", isbns[6]);
         mediaResource.createBook(testBook);
-        Response response = mediaResource.updateBook(new Book("", "", "test"), testBook.getIsbn());
+        Response response = mediaResource.updateBook(new Book("", "", isbns[7]), testBook.getIsbn().toString());
         assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
-        Book result = mediaResource.getBook(testBook.getIsbn());
+        Book result = mediaResource.getBook(testBook.getIsbn().toString());
         assertEquals(result.getTitle(), testBook.getTitle());
         assertEquals(result.getAuthor(), testBook.getAuthor());
         Book notFound = mediaResource.getBook("test");
@@ -132,7 +142,7 @@ public class MediaResourceTest
     public void updateBookNotFound() throws Exception
     {
 
-        Response response = mediaResource.updateBook(new Book("", "olive", ""), "irgendwas");
+        Response response = mediaResource.updateBook(new Book("", "olive", null), isbns[8].toString());
         assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
 
     }

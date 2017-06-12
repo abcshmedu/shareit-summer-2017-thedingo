@@ -8,16 +8,16 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 @Path("/media")
-public class MediaResource {
+public class MediaResource
+{
 
     private final MediaService mediaService;
 
     @Inject
-    public MediaResource(MediaService mediaService) {
+    public MediaResource(MediaService mediaService)
+    {
         this.mediaService = mediaService;
     }
 
@@ -25,7 +25,8 @@ public class MediaResource {
     @Path("/books")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createBook(Book book) {
+    public Response createBook(Book book)
+    {
         MediaServiceResult result = mediaService.addBook(book);
 
         return Response.status(result.getStatus())
@@ -36,20 +37,16 @@ public class MediaResource {
     @GET
     @Path("/books/{isbn}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Book getBook(@PathParam("isbn") String isbn) {
-
-        try {
-            return getSingleBook(isbn);
-        }
-        catch (NoSuchElementException e) {
-            return null;
-        }
+    public Book getBook(@PathParam("isbn") String isbn)
+    {
+        return mediaService.getBook(isbn);
     }
 
     @GET
     @Path("/books")
     @Produces(MediaType.APPLICATION_JSON)
-    public Book[] getBooks() {
+    public Book[] getBooks()
+    {
         return mediaService.getBooks();
     }
 
@@ -57,9 +54,10 @@ public class MediaResource {
     @Path("/books/{isbn}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateBook(Book book, @PathParam("isbn") String isbn) {
+    public Response updateBook(Book book, @PathParam("isbn") String isbn)
+    {
 
-        MediaServiceResult result = mediaService.updateBook(new Book(book.getTitle(),book.getAuthor(),isbn));
+        MediaServiceResult result = mediaService.updateBook(book, isbn);
         return Response.status(result.getStatus())
                 .entity(result.getAsJSON())
                 .build();
@@ -73,7 +71,8 @@ public class MediaResource {
     @Path("/discs")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createDisc(Disc disc) {
+    public Response createDisc(Disc disc)
+    {
 
         MediaServiceResult result = mediaService.addDisc(disc);
 
@@ -86,19 +85,16 @@ public class MediaResource {
     @GET
     @Path("/discs/{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Disc getDisc(@PathParam("barcode") String barcode) {
-        try {
-            return getSingleDisc(barcode);
-        }
-        catch (NoSuchElementException e) {
-            return null;
-        }
+    public Disc getDisc(@PathParam("barcode") String barcode)
+    {
+        return mediaService.getDisc(barcode);
     }
 
     @GET
     @Path("/discs")
     @Produces(MediaType.APPLICATION_JSON)
-    public Disc[] getDiscs() {
+    public Disc[] getDiscs()
+    {
         return mediaService.getDiscs();
     }
 
@@ -106,18 +102,11 @@ public class MediaResource {
     @Path("/discs/{barcode}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateDisc(Disc disc, @PathParam("barcode") String barcode) {
-        MediaServiceResult result = mediaService.updateDisc(new Disc(disc.getTitle(),barcode,disc.getDirector(), disc.getFsk()));
+    public Response updateDisc(Disc disc, @PathParam("barcode") String barcode)
+    {
+        MediaServiceResult result = mediaService.updateDisc(new Disc(disc.getTitle(), barcode, disc.getDirector(), disc.getFsk()));
         return Response.status(result.getStatus())
                 .entity(result.getAsJSON())
                 .build();
-    }
-
-    private Book getSingleBook(String isbn){
-        return (Book)Arrays.stream(mediaService.getBooks()).filter(b -> ((Book)b).getIsbn() == isbn).findFirst().get();
-    }
-
-    private Disc getSingleDisc(String barcode){
-        return (Disc)Arrays.stream(mediaService.getDiscs()).filter(b -> ((Disc)b).getBarcode() == barcode).findFirst().get();
     }
 }

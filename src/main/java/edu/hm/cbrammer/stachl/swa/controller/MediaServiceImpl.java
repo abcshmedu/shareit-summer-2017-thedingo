@@ -1,6 +1,7 @@
 package edu.hm.cbrammer.stachl.swa.controller;
 
 
+import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
 import edu.hm.cbrammer.stachl.swa.models.Book;
 import edu.hm.cbrammer.stachl.swa.models.Disc;
 import edu.hm.cbrammer.stachl.swa.models.MediaPersistence;
@@ -51,10 +52,22 @@ public class MediaServiceImpl implements MediaService
     }
 
     @Override
-    public MediaServiceResult updateBook(Book book)
+    public MediaServiceResult updateBook(Book book, String isbn)
     {
         final MediaServiceResult result;
-        final Book savedBook = mediaPersistence.getBookIfExists(book.getIsbn());
+
+        // Check Isbn
+        final Isbn checkedIsbn;
+        try
+        {
+            checkedIsbn = Isbn.of(isbn);
+        } catch (IllegalArgumentException e)
+        {
+            return new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("The given ISBN (%s) was not valid", isbn));
+        }
+
+
+        final Book savedBook = mediaPersistence.getBookIfExists(checkedIsbn);
         if (savedBook != null)
         {
             final String newTitle = book.getTitle().trim().isEmpty() ? savedBook.getTitle() : book.getTitle().trim();
@@ -101,8 +114,27 @@ public class MediaServiceImpl implements MediaService
     }
 
     @Override
+    public Book getBook(String isbn)
+    {
+        try
+        {
+            final Isbn checkedIsbn = Isbn.of(isbn);
+            return mediaPersistence.getBookIfExists(checkedIsbn);
+        } catch (IllegalArgumentException e)
+        {
+            return null;
+        }
+    }
+
+    @Override
     public Disc[] getDiscs()
     {
         return mediaPersistence.getDiscs();
+    }
+
+    @Override
+    public Disc getDisc(String barcode)
+    {
+        return mediaPersistence.getDiscIfExists(barcode);
     }
 }

@@ -1,29 +1,34 @@
 package edu.hm.cbrammer.stachl.swa.controller;
 
+
 import edu.hm.cbrammer.stachl.swa.models.Book;
 import edu.hm.cbrammer.stachl.swa.models.Disc;
-import edu.hm.cbrammer.stachl.swa.models.Medium;
+import edu.hm.cbrammer.stachl.swa.models.MediaPersistence;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MediaServiceImpl implements MediaService
 {
-    private final Map<String, Book> books = new HashMap<>();
-    private final Map<String, Disc> discs = new HashMap<>();
+    private final MediaPersistence mediaPersistence;
+
+    @Inject
+    public MediaServiceImpl(MediaPersistence mediaPersistence)
+    {
+        this.mediaPersistence = mediaPersistence;
+    }
 
     @Override
     public MediaServiceResult addBook(Book book)
     {
         final MediaServiceResult result;
-        if(books.containsKey(book.getIsbn()))
+        if (mediaPersistence.getBookIfExists(book.getIsbn()) != null)
         {
             result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Book with ISBN '%s' already exists.", book.getIsbn()));
         }
         else
         {
-            books.put(book.getIsbn(),book);
+            mediaPersistence.updateOrCreate(book);
             result = new MediaServiceResult(Response.Status.CREATED, String.format("Book with ISBN '%s' was successfully created.", book.getIsbn()));
         }
         return result;
@@ -33,13 +38,13 @@ public class MediaServiceImpl implements MediaService
     public MediaServiceResult addDisc(Disc disc)
     {
         final MediaServiceResult result;
-        if(discs.containsKey(disc.getBarcode()))
+        if (mediaPersistence.getDiscIfExists(disc.getBarcode()) != null)
         {
             result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Disc with Barcode '%s' already exists.", disc.getBarcode()));
         }
         else
         {
-            discs.put(disc.getBarcode(),disc);
+            mediaPersistence.updateOrCreate(disc);
             result = new MediaServiceResult(Response.Status.CREATED, String.format("Disc with Barcode '%s' was successfully created.", disc.getBarcode()));
         }
         return result;
@@ -49,14 +54,13 @@ public class MediaServiceImpl implements MediaService
     public MediaServiceResult updateBook(Book book)
     {
         final MediaServiceResult result;
-        if(books.containsKey(book.getIsbn()))
+        final Book savedBook = mediaPersistence.getBookIfExists(book.getIsbn());
+        if (savedBook != null)
         {
-            final Book currentBook = books.get(book.getIsbn());
+            final String newTitle = book.getTitle().trim().isEmpty() ? savedBook.getTitle() : book.getTitle().trim();
+            final String newAuthor = book.getAuthor().trim().isEmpty() ? savedBook.getAuthor() : book.getAuthor().trim();
 
-            final String newTitle = book.getTitle().trim().isEmpty() ? currentBook.getTitle() : book.getTitle().trim();
-            final String newAuthor = book.getAuthor().trim().isEmpty() ? currentBook.getAuthor() : book.getAuthor().trim();
-
-            books.put(book.getIsbn(), new Book(newTitle,newAuthor,book.getIsbn()));
+            mediaPersistence.updateOrCreate(new Book(newTitle, newAuthor, book.getIsbn()));
 
             result = new MediaServiceResult(Response.Status.OK, String.format("Book with ISBN '%s' was successfully updated.", book.getIsbn()));
         }
@@ -71,15 +75,15 @@ public class MediaServiceImpl implements MediaService
     public MediaServiceResult updateDisc(Disc disc)
     {
         final MediaServiceResult result;
-        if(discs.containsKey(disc.getBarcode()))
+        final Disc savedDisc = mediaPersistence.getDiscIfExists(disc.getBarcode());
+        if (savedDisc != null)
         {
-            final Disc currentDisc = discs.get(disc.getBarcode());
 
-            final String newTitle = disc.getTitle().trim().isEmpty() ? currentDisc.getTitle() : disc.getTitle().trim();
-            final String newDirector = disc.getDirector().trim().isEmpty() ? currentDisc.getDirector() : disc.getDirector().trim();
-            final int newFsk = disc.getFsk() == -1 ? currentDisc.getFsk() : disc.getFsk();
+            final String newTitle = disc.getTitle().trim().isEmpty() ? savedDisc.getTitle() : disc.getTitle().trim();
+            final String newDirector = disc.getDirector().trim().isEmpty() ? savedDisc.getDirector() : disc.getDirector().trim();
+            final int newFsk = disc.getFsk() == -1 ? savedDisc.getFsk() : disc.getFsk();
 
-            discs.put(disc.getBarcode(), new Disc(newTitle,disc.getBarcode(),newDirector,newFsk));
+            mediaPersistence.updateOrCreate(new Disc(newTitle, disc.getBarcode(), newDirector, newFsk));
 
             result = new MediaServiceResult(Response.Status.OK, String.format("Disc with Barcode '%s' was successfully updated.", disc.getBarcode()));
         }
@@ -93,12 +97,12 @@ public class MediaServiceImpl implements MediaService
     @Override
     public Book[] getBooks()
     {
-        return books.values().toArray(new Book[books.size()]);
+        return mediaPersistence.getBooks();
     }
 
     @Override
     public Disc[] getDiscs()
     {
-        return discs.values().toArray(new Disc[books.size()]);
+        return mediaPersistence.getDiscs();
     }
 }

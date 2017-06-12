@@ -6,16 +6,17 @@ import com.google.inject.servlet.ServletModule;
 import edu.hm.cbrammer.stachl.swa.controller.MediaResource;
 import edu.hm.cbrammer.stachl.swa.controller.MediaService;
 import edu.hm.cbrammer.stachl.swa.controller.MediaServiceImpl;
-import edu.hm.cbrammer.stachl.swa.controller.MediaServiceResult;
 import edu.hm.cbrammer.stachl.swa.models.Book;
 import edu.hm.cbrammer.stachl.swa.models.Disc;
-import org.junit.Before;
+import edu.hm.cbrammer.stachl.swa.models.MediaPersistence;
+import edu.hm.cbrammer.stachl.swa.models.MediaPersistenceImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class MediaResourceTest
@@ -33,6 +34,7 @@ public class MediaResourceTest
             protected void configureServlets()
             {
                 bind(MediaService.class).to(MediaServiceImpl.class);
+                bind(MediaPersistence.class).to(MediaPersistenceImpl.class);
             }
         });
 

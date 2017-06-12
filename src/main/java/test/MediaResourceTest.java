@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class MediaResourceTest {
 
-    private static MediaResource mediaResource = new MediaResource();
+    private static MediaResource mediaResource;// = new MediaResource(null);
 
     @Test
     public void createBook() throws Exception {

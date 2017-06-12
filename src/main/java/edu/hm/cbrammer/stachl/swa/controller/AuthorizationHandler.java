@@ -23,7 +23,10 @@ public class AuthorizationHandler extends HandlerWrapper {
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String JWT = baseRequest.getHeader("Authorization");
-
+        if(JWT == null) {
+            sendResponse(response,Response.SC_UNAUTHORIZED,"Bad JWT Token. Request new one from Authorization Server");
+            return;
+        }
         String[] requestArray = JWT.split(" ");
 
         if (requestArray.length == 1) {

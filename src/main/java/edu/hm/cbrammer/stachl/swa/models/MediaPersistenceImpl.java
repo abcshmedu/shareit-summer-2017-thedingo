@@ -49,7 +49,6 @@ public class MediaPersistenceImpl implements MediaPersistence
         try (HibernateTransaction t = new
                 HibernateTransaction())
         {
-            t.persist(book.getIsbn());
             t.persist(book);
         } catch (Exception e)
         {

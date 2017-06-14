@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
  */
 
 @Entity
-@Table(name = "TIsbn")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Isbn implements Serializable
 {
@@ -193,19 +192,9 @@ public class Isbn implements Serializable
         }
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
     private String originalIsbn;
+    @Id
     private String normalizedIsbn;    // hyphens are removed
-
-    private String prefix;
-    @Column(name = "CGroup")
-    private String group;
-    private String publisher;
-    private String bookName;
-    private String checkDigit;
 
     private Isbn()
     {
@@ -218,24 +207,6 @@ public class Isbn implements Serializable
 
         this.originalIsbn = originalIsbn;
         this.normalizedIsbn = removeHyphen(this.originalIsbn);
-
-        String[] numbers = this.originalIsbn.split("-");
-        if (numbers.length == 5)
-        {
-            this.prefix = numbers[0];
-            this.group = numbers[1];
-            this.publisher = numbers[2];
-            this.bookName = numbers[3];
-            this.checkDigit = numbers[4];
-        }
-        else
-        {
-            this.prefix = "";
-            this.group = "";
-            this.publisher = "";
-            this.bookName = "";
-            this.checkDigit = "";
-        }
     }
 
     public String getIsbn()
@@ -243,30 +214,6 @@ public class Isbn implements Serializable
         return originalIsbn;
     }
 
-    public String getPrefix()
-    {
-        return prefix;
-    }
-
-    public String getGroup()
-    {
-        return group;
-    }
-
-    public String getPublisher()
-    {
-        return publisher;
-    }
-
-    public String getBookName()
-    {
-        return bookName;
-    }
-
-    public String getCheckDigit()
-    {
-        return checkDigit;
-    }
 
     /**
      * @return original description of ISBN. It can include hyphens like 978-4-***-*****-*.

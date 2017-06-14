@@ -11,7 +11,7 @@ public class HibernateUtils {
     private static SessionFactory sessionFactory;
 
     static {
-        sessionFactory = new Configuration().configure(Paths.get("C:\\Projects\\SoftwareArch\\shareit-summer-2017-thedingo\\hibernate.cfg.xml").toFile()).buildSessionFactory();
+        sessionFactory = new Configuration().configure(Paths.get("hibernate.cfg.xml").toFile()).buildSessionFactory();
     }
 
     public static SessionFactory getSessionFactory() {

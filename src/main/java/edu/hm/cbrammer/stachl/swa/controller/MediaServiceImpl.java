@@ -22,16 +22,25 @@ public class MediaServiceImpl implements MediaService
     @Override
     public MediaServiceResult addBook(Book book)
     {
-        final MediaServiceResult result;
-        if (mediaPersistence.getBookIfExists(book.getIsbn()) != null)
+        MediaServiceResult result;
+        try
         {
-            result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Book with ISBN '%s' already exists.", book.getIsbn()));
-        }
-        else
+            final String checkedIsbn = Isbn.of(book.getIsbn());
+            if (mediaPersistence.getBookIfExists(checkedIsbn) != null)
+            {
+                result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Book with ISBN '%s' already exists.", book.getIsbn()));
+            }
+            else
+            {
+                mediaPersistence.updateOrCreate(book);
+                result = new MediaServiceResult(Response.Status.CREATED, String.format("Book with ISBN '%s' was successfully created.", book.getIsbn()));
+            }
+        } catch (IllegalArgumentException e)
         {
-            mediaPersistence.updateOrCreate(book);
-            result = new MediaServiceResult(Response.Status.CREATED, String.format("Book with ISBN '%s' was successfully created.", book.getIsbn()));
+            result = new MediaServiceResult(Response.Status.BAD_REQUEST, String.format("Invalid ISBN number given: '%s'.", book.getIsbn()));
         }
+
+
         return result;
     }
 

@@ -17,7 +17,6 @@
         <property name="hbm2ddl.auto">create</property>
         <property name="transaction.auto_close_session">true</property>
 
-        <mapping class="edu.hm.cbrammer.stachl.swa.thirdparty.Isbn" />
         <mapping class="edu.hm.cbrammer.stachl.swa.models.Medium" />
         <mapping class="edu.hm.cbrammer.stachl.swa.models.Book" />
         <mapping class="edu.hm.cbrammer.stachl.swa.models.Disc" />

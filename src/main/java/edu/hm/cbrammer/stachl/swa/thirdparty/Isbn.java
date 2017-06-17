@@ -184,63 +184,11 @@ public class Isbn implements Serializable
 
         if (removeHyphen(number).length() == OLD_LENGTH)
         {
-            return new Isbn(toIsbn13(number)).getIsbn();
+            return removeHyphen(toIsbn13(number));
         }
         else
         {
-            return new Isbn(number).getIsbn();
+            return removeHyphen(number);
         }
-    }
-
-    private String originalIsbn;
-    @Id
-    private String normalizedIsbn;    // hyphens are removed
-
-    public Isbn()
-    {
-
-    }
-
-    private Isbn(String originalIsbn)
-    {
-        assert null != originalIsbn;
-
-        this.originalIsbn = originalIsbn;
-        this.normalizedIsbn = removeHyphen(this.originalIsbn);
-    }
-
-    public String getIsbn()
-    {
-        return normalizedIsbn;
-    }
-
-
-    /**
-     * @return original description of ISBN. It can include hyphens like 978-4-***-*****-*.
-     */
-    @Override
-    public String toString()
-    {
-        return originalIsbn;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof Isbn))
-            return false;
-        Isbn other = (Isbn) obj;
-        return other.normalizedIsbn.equals(normalizedIsbn);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + normalizedIsbn.hashCode();
-        return result;
     }
 }

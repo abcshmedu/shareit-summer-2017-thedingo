@@ -30,8 +30,8 @@ public class MediaResourceTest
     public static void setUp() throws Exception
     {
         isbns = new String[9];
-        isbns[0]= Isbn.of("978-3551559005");
-        isbns[1]= Isbn.of("978-3551556943");
+        isbns[0]= Isbn.of("388053101-3");
+        isbns[1]= Isbn.of("3833223731");
         isbns[2]= Isbn.of("978-3608939811");
         isbns[3]= Isbn.of("978-3442380299");
         isbns[4]= Isbn.of("978-3888979149");
@@ -138,6 +138,13 @@ public class MediaResourceTest
         assertEquals(notFound, null);
     }
 
+    @Test
+    public void updateBookCorruptIsbn()
+    {
+        final String isbn = "1243";
+        Response response = mediaResource.updateBook(new Book("", "olive", null), isbn);
+        assertEquals(response.getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+    }
     @Test
     public void updateBookNotFound() throws Exception
     {

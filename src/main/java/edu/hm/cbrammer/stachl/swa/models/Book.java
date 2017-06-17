@@ -1,8 +1,7 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
-import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Book extends Medium
@@ -48,14 +47,5 @@ public class Book extends Medium
         if (!getAuthor().equals(book.getAuthor())) return false;
         if (!getTitle().equals(book.getTitle())) return false;
         return getIsbn().equals(book.getIsbn());
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Book{" +
-                "author='" + author + '\'' +
-                ", isbn='" + isbn + '\'' +
-                '}';
     }
 }

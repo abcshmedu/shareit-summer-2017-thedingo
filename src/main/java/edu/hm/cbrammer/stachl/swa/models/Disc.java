@@ -47,12 +47,4 @@ public class Disc extends Medium
         return director != null ? director.equals(disc.director) : disc.director == null;
     }
 
-    @Override
-    public String toString() {
-        return "Disc{" +
-                "barcode='" + barcode + '\'' +
-                ", director='" + director + '\'' +
-                ", fsk=" + fsk +
-                '}';
-    }
 }

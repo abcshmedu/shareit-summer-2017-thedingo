@@ -1,8 +1,8 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
-import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
 import edu.hm.hibernate.HibernateTransaction;
 import edu.hm.hibernate.HibernateUtils;
+import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
@@ -14,20 +14,27 @@ import java.util.List;
 public class MediaPersistenceImpl implements MediaPersistence
 {
 
+    public MediaPersistenceImpl()
+    {
+    }
+
     @Override
     public Book[] getBooks()
     {
+        Transaction trans = HibernateUtils.getSessionFactory().getCurrentSession().beginTransaction();
         CriteriaBuilder builder = HibernateUtils.getSessionFactory().getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<Book> query = builder.createQuery(Book.class);
+        Root<Book> root = query.from(Book.class);
 
         Query<Book> q = HibernateUtils.getSessionFactory().getCurrentSession().createQuery(query);
 
         List<Book> results = q.getResultList();
+        trans.commit();
         return results.toArray(new Book[results.size()]);
     }
 
     @Override
-    public Book getBookIfExists(Isbn isbn)
+    public Book getBookIfExists(String isbn)
     {
         Transaction trans = HibernateUtils.getSessionFactory().getCurrentSession().beginTransaction();
         CriteriaBuilder builder = HibernateUtils.getSessionFactory().getCurrentSession().getCriteriaBuilder();
@@ -49,10 +56,10 @@ public class MediaPersistenceImpl implements MediaPersistence
         try (HibernateTransaction t = new
                 HibernateTransaction())
         {
-            t.persist(book);
+            t.saveOrUpdate(book);
         } catch (Exception e)
         {
-
+            e.printStackTrace();
         }
     }
 
@@ -60,18 +67,46 @@ public class MediaPersistenceImpl implements MediaPersistence
     @Override
     public Disc[] getDiscs()
     {
-        return new Disc[0];
+        Transaction trans = HibernateUtils.getSessionFactory().getCurrentSession().beginTransaction();
+        CriteriaBuilder builder = HibernateUtils.getSessionFactory().getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<Disc> query = builder.createQuery(Disc.class);
+        Root<Disc> root = query.from(Disc.class);
+
+        Query<Disc> q = HibernateUtils.getSessionFactory().getCurrentSession().createQuery(query);
+
+        List<Disc> results = q.getResultList();
+        trans.commit();
+        return results.toArray(new Disc[results.size()]);
     }
 
     @Override
     public Disc getDiscIfExists(String barcode)
     {
-        return null;
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+        Transaction trans = session.beginTransaction();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Disc> query = builder.createQuery(Disc.class);
+        Root<Disc> root = query.from(Disc.class);
+
+        query.where(builder.equal(root.get("barcode"), barcode));
+
+        Query<Disc> q = session.createQuery(query);
+
+        List<Disc> results = q.getResultList();
+        trans.commit();
+        return results.size() > 0 ? results.get(0) : null;
     }
 
     @Override
     public void updateOrCreate(Disc disc)
     {
-
+        try (HibernateTransaction t = new
+                HibernateTransaction())
+        {
+            t.saveOrUpdate(disc);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

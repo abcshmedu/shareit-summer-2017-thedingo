@@ -15,14 +15,9 @@ public class HibernateTransaction implements AutoCloseable
         transaction = session.beginTransaction();
     }
 
-    public void persist(Object o)
+    public void saveOrUpdate(Object o)
     {
-        session.persist(o);
-    }
-
-    public void persist(String s, Object o)
-    {
-        session.persist(s, o);
+        session.saveOrUpdate(o);
     }
 
     @Override

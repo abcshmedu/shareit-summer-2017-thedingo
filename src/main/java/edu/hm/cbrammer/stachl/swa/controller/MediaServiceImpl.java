@@ -57,7 +57,7 @@ public class MediaServiceImpl implements MediaService
         final MediaServiceResult result;
 
         // Check Isbn
-        final Isbn checkedIsbn;
+        final String checkedIsbn;
         try
         {
             checkedIsbn = Isbn.of(isbn);
@@ -73,7 +73,7 @@ public class MediaServiceImpl implements MediaService
             final String newTitle = book.getTitle().trim().isEmpty() ? savedBook.getTitle() : book.getTitle().trim();
             final String newAuthor = book.getAuthor().trim().isEmpty() ? savedBook.getAuthor() : book.getAuthor().trim();
 
-            mediaPersistence.updateOrCreate(new Book(newTitle, newAuthor, book.getIsbn()));
+            mediaPersistence.updateOrCreate(new Book(newTitle, newAuthor, checkedIsbn));
 
             result = new MediaServiceResult(Response.Status.OK, String.format("Book with ISBN '%s' was successfully updated.", book.getIsbn()));
         }
@@ -118,7 +118,7 @@ public class MediaServiceImpl implements MediaService
     {
         try
         {
-            final Isbn checkedIsbn = Isbn.of(isbn);
+            final String checkedIsbn = Isbn.of(isbn);
             return mediaPersistence.getBookIfExists(checkedIsbn);
         } catch (IllegalArgumentException e)
         {

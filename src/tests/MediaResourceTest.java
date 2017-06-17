@@ -24,12 +24,12 @@ public class MediaResourceTest
     private static MediaResource mediaResource;// = new MediaResource(null);
     private static Injector injector;
 
-    private static Isbn[] isbns;
+    private static String[] isbns;
 
     @BeforeClass
     public static void setUp() throws Exception
     {
-        isbns = new Isbn[9];
+        isbns = new String[9];
         isbns[0]= Isbn.of("978-3551559005");
         isbns[1]= Isbn.of("978-3551556943");
         isbns[2]= Isbn.of("978-3608939811");

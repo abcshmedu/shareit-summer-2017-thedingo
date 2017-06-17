@@ -1,14 +1,15 @@
 package edu.hm.cbrammer.stachl.swa.models;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Disc extends Medium
 {
-
+    @Id
     private String barcode;
     private String director;
-    private int fsk;
+    private int fsk = -1;
 
     public Disc(String title, String barcode, String director, int fsk) {
         super(title);
@@ -17,8 +18,8 @@ public class Disc extends Medium
         this.fsk = fsk;
     }
 
-    private Disc(){
-        this("","","",-1);
+    public Disc()
+    {
     }
 
     public String getBarcode() {
@@ -44,14 +45,6 @@ public class Disc extends Medium
         if (barcode != null ? !barcode.equals(disc.barcode) : disc.barcode != null) return false;
         if (!getTitle().equals(disc.getTitle())) return false;
         return director != null ? director.equals(disc.director) : disc.director == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = barcode != null ? barcode.hashCode() : 0;
-        result = 31 * result + (director != null ? director.hashCode() : 0);
-        result = 31 * result + fsk;
-        return result;
     }
 
     @Override

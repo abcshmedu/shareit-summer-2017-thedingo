@@ -177,18 +177,18 @@ public class Isbn implements Serializable
      * @return ISBN Object
      * @throws IllegalArgumentException if the argument is invalid as ISBN
      */
-    public static Isbn of(String number) throws IllegalArgumentException
+    public static String of(String number) throws IllegalArgumentException
     {
         if (number == null) throw new NullPointerException();
         if (!isValid(number)) throw new IllegalArgumentException();
 
         if (removeHyphen(number).length() == OLD_LENGTH)
         {
-            return new Isbn(toIsbn13(number));
+            return new Isbn(toIsbn13(number)).getIsbn();
         }
         else
         {
-            return new Isbn(number);
+            return new Isbn(number).getIsbn();
         }
     }
 
@@ -196,7 +196,7 @@ public class Isbn implements Serializable
     @Id
     private String normalizedIsbn;    // hyphens are removed
 
-    private Isbn()
+    public Isbn()
     {
 
     }
@@ -211,7 +211,7 @@ public class Isbn implements Serializable
 
     public String getIsbn()
     {
-        return originalIsbn;
+        return normalizedIsbn;
     }
 
 

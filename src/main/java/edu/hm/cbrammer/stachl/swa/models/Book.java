@@ -2,32 +2,28 @@ package edu.hm.cbrammer.stachl.swa.models;
 
 import edu.hm.cbrammer.stachl.swa.thirdparty.Isbn;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 public class Book extends Medium
 {
     private String author;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BOOK_ISBN", unique = true, updatable = false)
-    private Isbn isbn;
+    @Id
+    private String isbn;
 
-    public Book(String title, String author, Isbn isbn)
+    public Book(String title, String author, String isbn)
     {
         super(title);
         this.author = author;
         this.isbn = isbn;
     }
 
-    private Book()
+    public Book()
     {
         super("");
         this.author = "";
-        this.isbn = null;
+        this.isbn = "";
     }
 
     public String getAuthor()
@@ -35,7 +31,7 @@ public class Book extends Medium
         return author;
     }
 
-    public Isbn getIsbn()
+    public String getIsbn()
     {
         return isbn;
     }

@@ -4,7 +4,7 @@ Thomas Stachl
 Chris Brammer
 
 
-Heroku Link: https://quiet-mesa-60262.herokuapp.com/
+Heroku Link: https://mysterious-mesa-39525.herokuapp.com/
 
 Requests need the Header "Authorization" with the value "bearer %token%"
 

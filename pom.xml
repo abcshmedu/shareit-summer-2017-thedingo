@@ -106,7 +106,7 @@
                 <artifactId>heroku-maven-plugin</artifactId>
                 <version>1.1.3</version>
                 <configuration>
-                    <appName>quiet-mesa-60262</appName>
+                    <appName>mysterious-mesa-39525</appName>
                 </configuration>
             </plugin>
             <plugin>
